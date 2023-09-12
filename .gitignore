@@ -1,0 +1,42 @@
+# Ignore Node.js modules
+node_modules/
+
+# Ignore log files
+*.log
+
+# Ignore environment-specific configuration files
+.env
+
+# Ignore development-specific files and directories
+.DS_Store
+.vscode/
+.idea/
+npm-debug.log*
+
+# Ignore built files and directories (e.g., transpiled code)
+dist/
+build/
+out/
+
+# Ignore any generated documentation
+doc/
+
+# Ignore local configuration files
+config/local.json
+config/local.js
+
+# Ignore user-specific files
+*.suo
+*.user
+*.sln.docstates
+.svscode/
+.sidea/
+
+# Ignore OS-specific files
+Thumbs.db
+.DS_Store?
+
+# Ignore package-lock.json for Yarn workspaces
+**/yarn-error.log
+**/yarn-error.log.*
+**/lerna-debug.log
