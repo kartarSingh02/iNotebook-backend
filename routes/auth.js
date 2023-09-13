@@ -2,6 +2,11 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/Users');
 const { body, validationResult } = require('express-validator');
+const bcrypt = require('bcryptjs');
+
+// using jwt -> used for secure communication via giving a unique token to user so that person wont acces another user data by chanign the name
+var jwt = require('jsonwebtoken');
+const JWT_SECRET = 'kartarUsingJWTForFirstTime$'
 
 // Creating a User using :post api "/api/auth/createuser" - no auth required
 router.post('/createuser',[
@@ -22,13 +27,29 @@ router.post('/createuser',[
     if(user){
         return res.status(400).json({error: "Sorry a user with this email already exists"})
     }
+
+    // creating a secure password using bcryptjs for adding extra layer of security using salt and gensalt will generate salt for you
+    // we have added await because bcrypt return promise means its and async funciton and wait for the result without blocking further operations
+    const salt = await bcrypt.genSalt(10);
+    const secPass= await bcrypt.hash(req.body.password,salt);
+
     user = await User.create({
         name: req.body.name,
         email: req.body.email,
-        password: req.body.password,
+        password: secPass,
     })
 
-    res.json(user)
+    const data = {
+        user:{
+            id:user.id
+        }
+    }
+    // this will return token which will be on id basis uniquely
+    const authToken = jwt.sign(data,JWT_SECRET);
+    console.log(authToken);
+    res.json({authToken})
+    // browser will save the token and if same user came he will be able to access
+
     } catch(error){
         console.log(error.message);
         res.status(500).send("Some Error Occured");
