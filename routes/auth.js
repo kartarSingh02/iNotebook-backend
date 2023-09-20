@@ -20,10 +20,11 @@ router.post(
     }),
   ],
   async (req, res) => {
+    let success=false;
     // if got errors return bad request and errors
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return res.status(400).json({success, errors: errors.array() });
     }
 
     try {
@@ -32,7 +33,7 @@ router.post(
       if (user) {
         return res
           .status(400)
-          .json({ error: "Sorry a user with this email already exists" });
+          .json({ success, error: "Sorry a user with this email already exists" });
       }
 
       // creating a secure password using bcryptjs for adding extra layer of security using salt and gensalt will generate salt for you
@@ -54,7 +55,8 @@ router.post(
       // this will return token which will be on id basis uniquely
       const authToken = jwt.sign(data, JWT_SECRET);
       console.log(authToken);
-      res.json({ authToken });
+      success=true;
+      res.json({success, authToken });
       // browser will save the token and if same user came he will be able to access
     } catch (error) {
       console.log(error.message);
